@@ -31,13 +31,17 @@ const Tour = require('./../models/tourModels');
 
 exports.getAllTour = async(req, res) => {
   try{
+    //1 Filtering
     const queryObj = {...req.query};
     const exculdeFields = ['page','sort','limit','fields'];
     exculdeFields.forEach(el => delete queryObj[el]);
 
-    console.log(req.query,queryObj);
+    // 2 advanced filtering
+    let queryStr = JSON.stringify(queryObj);
+    queryStr = queryStr.replace(/\b(gt|gte|lte|lt)\b/g,match =>`$${match}`);
+    console.log(JSON.parse(queryStr));
+    const query =  Tour.find(JSON.parse(queryStr));
 
-    const query =  Tour.find(queryObj);
     // console.log(req.requestTime); for testing purpose
     // if(id > tours.length){
     
