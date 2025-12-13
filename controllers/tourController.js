@@ -1,5 +1,11 @@
 // const fs = require('fs');
 const Tour = require('./../models/tourModels');
+exports.aliasTopTours =(req,res,next)=>{
+  req.query.limit = '5';
+  req.query.sort = '-ratingsAverage,price';
+  req.query.fields = 'name,price,ratingsAverage,summery,difficulty';
+  next();
+};
 
 // const tours = JSON.parse(  //testing purpose
 //   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
@@ -67,9 +73,18 @@ exports.getAllTour = async(req, res) => {
 
     //pagination--------------------------------------------------------------
 
-    // query = query.skip(2).limit(10);
-
     
+    const page = req.query.page *1 || 1;
+    const limit = req.query.limit * 1 || 100;
+    const skip = (page -1) * limit;
+    
+    query = query.skip(skip).limit(limit);
+
+    if(req.query.page){
+      const numTours = await Tour.countDocuments();
+      if(skip >= numTours) throw new Error("This page not found");
+    }
+
 
 
 
