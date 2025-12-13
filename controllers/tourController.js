@@ -31,23 +31,57 @@ const Tour = require('./../models/tourModels');
 
 exports.getAllTour = async(req, res) => {
   try{
-    //1 Filtering
+    //1 Filtering------------------------------------------------------------
     const queryObj = {...req.query};
     const exculdeFields = ['page','sort','limit','fields'];
     exculdeFields.forEach(el => delete queryObj[el]);
 
-    // 2 advanced filtering
+    // 2 advanced filtering--------------------------------------------------
+
+
     let queryStr = JSON.stringify(queryObj);
     queryStr = queryStr.replace(/\b(gt|gte|lte|lt)\b/g,match =>`$${match}`);
     console.log(JSON.parse(queryStr));
-    const query =  Tour.find(JSON.parse(queryStr));
+    let query =  Tour.find(JSON.parse(queryStr));
+
+    //sorting----------------------------------------------------------------
+
+    if(req.query.sort){
+      const sortBy = req.query.sort.split(',').join(' ');
+      query = query.sort(sortBy);
+    }
+    else{
+      query = query.sort('-createdAt');
+    }
+
+    //Field limiting---------------------------------------------------------
+
+    if(req.query.fields){
+      const fields = req.query.fields.split(',').join(' ');
+      query = query.select(fields);
+    }
+    else{
+      query = query.select('-__v');
+    } 
+
+
+    //pagination--------------------------------------------------------------
+
+    // query = query.skip(2).limit(10);
+
+    
+
+
+
+
+
 
     // console.log(req.requestTime); for testing purpose
     // if(id > tours.length){
     
     //Execute query
     const tours = await query;
-
+    // console.log(tours)
     
     //send query
     res.status(200).json({
