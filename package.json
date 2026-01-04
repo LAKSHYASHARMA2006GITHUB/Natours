@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon server.js",
-    "debug":"ndb server.js"
+    "start:prod": "cross-env NODE_ENV=production nodemon server.js",
+    "debug": "ndb server.js"
   },
   "author": "Lakshya",
   "license": "ISC",
@@ -18,6 +19,7 @@
     "validator": "^13.15.26"
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "ndb": "^1.1.5"
   }
 }
