@@ -68,7 +68,7 @@ exports.getTour = catchAsync( async (req, res,next) => {
   // const id = req.params.id * 1;
   // const tour = tours.find((el) => el.id === id);  // for testi
   // // if(id > tours.length){
-    const tour = await Tour.findById(req.params.id);
+  const tour = await Tour.findById(req.params.id);
     if(!tour){
       return next(new AppError('No tour found with that ID',404));
     }
@@ -92,7 +92,7 @@ exports.getTour = catchAsync( async (req, res,next) => {
 exports.postTour = catchAsync(async (req, res,next) => {
   const newTour = await Tour.create(req.body);
 
-  if (!tour) {
+  if (!newTour) {
     return next(new AppError('No tour found with that ID', 404));
   }
 
